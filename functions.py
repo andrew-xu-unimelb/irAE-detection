@@ -16,7 +16,7 @@ class AnnotationProcess:
         result = ""
         for i in range(len(sentences)):
             result += sentences[i]
-            if (i+1) % self.n == 0 and i < len(sentences-1):
+            if (i+1) % self.n == 0 and i < len(sentences)-1:
                 result += ". \n"
             else:
                 result += ". "
@@ -32,8 +32,8 @@ class AnnotationProcess:
             assert self.dataset_name in db
         return db.get_dataset(self.dataset_name)
     
-    def prodigy_connect(self, recipe):
+    def prodigy_connect(self, recipe, file):
         labels = self.label_processor()
-        cmd = f"prodigy {recipe} {self.dataset_name} {self.model} {self.dir} --label {labels}"
+        cmd = f"prodigy {recipe} {self.dataset_name} {self.model} {file} --label {labels}"
         os.system(cmd)
     
