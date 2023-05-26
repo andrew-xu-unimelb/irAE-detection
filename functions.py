@@ -8,19 +8,6 @@ class ProdigyFunctions:
         self.n = 5 # number of sentences per card
         self.dataset_name = dataset_name
         self.model = model # path to spaCy model to use for Prodigy recipe
-
-    def card_generator(input_string, n=5):
-        # reformats text breaks to make annotation cards more consistent in length
-        sentences = input_string.replace("\n", "")
-        sentences = sentences.split(". ")
-        result = ""
-        for i in range(len(sentences)):
-            result += sentences[i]
-            if (i+1) % n == 0 and i < len(sentences)-1:
-                result += ". \n"
-            else:
-                result += ". "
-        return result 
     
     def label_processor(self):
         return(",".join(self.label_list))
