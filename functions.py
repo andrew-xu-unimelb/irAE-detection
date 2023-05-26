@@ -1,7 +1,7 @@
 from prodigy.components.db import connect
 import os
 
-class AnnotationProcess:
+class ProdigyFunctions:
     def __init__(self, dir, label_list, dataset_name, model):
         self.dir = dir # directory to read / write files
         self.label_list = label_list # labels for annotations
@@ -37,3 +37,34 @@ class AnnotationProcess:
         cmd = f"prodigy {recipe} {self.dataset_name} {self.model} {file} --label {labels}"
         os.system(cmd)
     
+class AnnotationProcess:
+    def __init__(self, report):
+        self.report = report
+    
+    def clean_report(self):
+        # cuts out pieces of the discharge summary that's not relevant to the use case
+        start_marker = "History of Present Illness:"
+        end_marker = "Discharge Instructions:"
+        start_index = self.report.find(start_marker)
+        end_index = self.report.find(end_marker)
+        if start_index == -1:
+            start_index = 0
+        if end_index == -1:
+            end_index = len(self.report)
+        return self.report[start_index:end_index].strip()
+
+    def card_generator(self, n=5):
+        input_string = self.clean_report(self.report)
+        # reformats text breaks to make annotation cards more consistent in length
+        sentences = input_string.replace("\n", "")
+        sentences = sentences.split(".")
+        result = ""
+        for i in range(len(sentences)):
+            result += sentences[i]
+            if (i+1) % n == 0 and i < len(sentences)-1:
+                result += ". \n"
+            else:
+                result += ". "
+        result += "\n"
+        return result 
+        
