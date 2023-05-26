@@ -9,14 +9,14 @@ class AnnotationProcess:
         self.dataset_name = dataset_name
         self.model = model # path to spaCy model to use for Prodigy recipe
 
-    def card_generator(self, input_string):
+    def card_generator(input_string, n=5):
         # reformats text breaks to make annotation cards more consistent in length
         sentences = input_string.replace("\n", "")
         sentences = sentences.split(". ")
         result = ""
         for i in range(len(sentences)):
             result += sentences[i]
-            if (i+1) % self.n == 0 and i < len(sentences)-1:
+            if (i+1) % n == 0 and i < len(sentences)-1:
                 result += ". \n"
             else:
                 result += ". "
