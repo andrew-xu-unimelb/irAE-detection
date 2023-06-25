@@ -31,8 +31,25 @@ class AnnotationProcess:
     def clean_report(self):
         # cuts out pieces of the discharge summary that's not relevant to the use case
         start_marker = "History of Present Illness:"
-        end_marker = "Discharge Instructions:"
+        marker_list = [
+            "History of Present Illness:"
+            "Past Medical History:",
+            "Social History:",
+            "Physical ___:",
+            "Pertinent Results:",
+            "Brief Hospital Course:",
+            "Medications on Admission:",
+            "Discharge Disposition:"
+        ]
         start_index = self.report.find(start_marker)
+        final_report = ""
+        index = 0
+        for i in marker_list:
+            new_index = self.report.find(i)
+            if new_index == -1:
+                new_index = len(self.report)
+            
+            
         end_index = self.report.find(end_marker)
         if start_index == -1:
             start_index = 0
