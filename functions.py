@@ -29,10 +29,9 @@ class AnnotationProcess:
         self.report = report
     
     def clean_report(self):
-        # cuts out pieces of the discharge summary that's not relevant to the use case
-        start_marker = "History of Present Illness:"
+    # cuts out pieces of the discharge summary that's not relevant to the use case
         marker_list = [
-            "History of Present Illness:"
+            "History of Present Illness:",
             "Past Medical History:",
             "Social History:",
             "Physical ___:",
@@ -41,21 +40,25 @@ class AnnotationProcess:
             "Medications on Admission:",
             "Discharge Disposition:"
         ]
-        start_index = self.report.find(start_marker)
-        final_report = ""
-        index = 0
-        for i in marker_list:
-            new_index = self.report.find(i)
-            if new_index == -1:
-                new_index = len(self.report)
+    
+        sections = []  # list to store each section as a dictionary
+    
+        for index in range(len(marker_list)-1):
+            start_marker = marker_list[index]
+            end_marker = marker_list[index + 1]
+
+            start_index = self.report.find(start_marker)
+            end_index = self.report.find(end_marker)
             
+            if start_index != -1 and end_index != -1:  # if both markers were found
+                section_text = self.report[start_index:end_index].strip()
+                sections.append({'text': section_text})
             
-        end_index = self.report.find(end_marker)
-        if start_index == -1:
-            start_index = 0
-        if end_index == -1:
-            end_index = len(self.report)
-        return self.report[start_index:end_index].strip()
+            elif start_index != -1 and end_index == -1:  # if only the start marker was found
+                section_text = self.report[start_index:].strip()
+                sections.append({'text': section_text})
+                
+        return sections  # return the final cleaned report as a list of dictionaries
 
     def card_generator(self, n=5):
         input_string = self.clean_report(self.report)
