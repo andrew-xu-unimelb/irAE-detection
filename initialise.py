@@ -10,5 +10,5 @@ label_list = [
 database = "irAE"
 model = "en_core_web_sm"
 annotate = fn.ProdigyFunctions(dir, label_list, database, model)
-annotate.database_connect(new_database=True)
+annotate.database_connect()
 annotate.prodigy_connect("ner.manual", "./data/cards.json")
