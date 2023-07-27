@@ -33,12 +33,8 @@ class AnnotationProcess:
         marker_list = [
             "History of Present Illness:",
             "Past Medical History:",
-            "Social History:",
             "Physical ___:",
-            "Pertinent Results:",
-            "Brief Hospital Course:",
-            "Medications on Admission:",
-            "Discharge Disposition:"
+            "Pertinent Results:"
         ]
     
         sections = []  # list to store each section as a dictionary
@@ -59,6 +55,25 @@ class AnnotationProcess:
                 sections.append({'text': section_text})
                 
         return sections  # return the final cleaned report as a list of dictionaries
+    
+    def extract_HOPC(self):
+        start_keyword = "History of Present Illness:"
+        end_keyword = "Past Medical History:"
+
+        # Find the start and end indexes
+        start_index = self.report.find(start_keyword)
+        end_index = self.report.find(end_keyword)
+
+        if start_index != -1 and end_index != -1:
+            # Extract the information
+            history_of_present_illness = self.report[start_index + len(start_keyword):end_index]
+
+            # Trim the leading/trailing whitespaces
+            history_of_present_illness = history_of_present_illness.strip()
+
+            return {"text": history_of_present_illness}
+
+
 
     def card_generator(self, n=5):
         input_string = self.clean_report(self.report)
